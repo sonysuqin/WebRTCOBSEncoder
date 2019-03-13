@@ -8,7 +8,7 @@ OBS studio is a very popular stable open source live streaming software, with so
 - AMD amd_amf_h264, hardware;
 - NVIDIA ffmpeg_nvenc, hardware.
 
-Take advanatge of these encoders, we can develop WebRTC real-time products supporting high resolution with low cpu usage under Windows, this article and source code will introduce detailly how to achieve this goal.
+Take advantage of these encoders, we can develop WebRTC real-time products supporting high resolution with low cpu usage under Windows, this article and source code will introduce detailly how to achieve this goal.
 
 # 2 Code 
 [https://github.com/sonysuqin/WebRTCOBSEncoder](https://github.com/sonysuqin/WebRTCOBSEncoder)
