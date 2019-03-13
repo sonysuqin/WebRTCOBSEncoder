@@ -720,6 +720,6 @@ void WinObsVideoEncoderFactory::DestroyVideoEncoder(webrtc::VideoEncoder* encode
     delete encoder;
 }
 
-} // namespace bee
+} // namespace webrtc
 
 #endif // #ifdef OBS_ENCODER

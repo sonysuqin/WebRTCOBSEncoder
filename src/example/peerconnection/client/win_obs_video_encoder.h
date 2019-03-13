@@ -366,7 +366,7 @@ private:
     std::vector<cricket::VideoCodec> supported_codecs_;
 };
 
-} // namespace bee
+} // namespace webrtc
 
 #endif // #ifndef __WIN_OBS_VIDEO_ENCODER_H__
 #endif // #ifdef OBS_ENCODER

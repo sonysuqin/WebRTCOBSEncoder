@@ -164,5 +164,5 @@ enum obs_scale_type WinObsAdapter::get_scale_type() {
     }
 }
 
-} // namespace bee
+} // namespace webrtc
 #endif // #ifdef OBS_ENCODER

@@ -28,7 +28,7 @@ private:
     static std::string  plugin_config_path_;
 };
 
-} // namespace bee
+} // namespace webrtc
 
 #endif // #ifdef __WIN_OBS_ADAPTER_H__
 #endif // #ifdef OBS_ENCODER
