@@ -1,7 +1,7 @@
 #!/bin/bash
 
 patchDir=`pwd`
-obsDir=../obs
+obsDir=../../obs
 basename=`basename $0`
 
 files=`ls`
