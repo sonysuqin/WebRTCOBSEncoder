@@ -31,9 +31,9 @@ With these encoders, we can design WebRTC real-time products supporting high res
 ## 5.1 Directory Structure
 Make sure the directory structure is:
 ```
-©À©¤©¤ obs
-©À©¤©¤ WebRTC
-©¸©¤©¤ WebRTCOBSEncoder
+|-- obs
+|-- WebRTC
+`-- WebRTCOBSEncoder
 ```
 
 ## 5.2 Clone WebRTCOBSEncoder
@@ -54,32 +54,32 @@ After you cloned WebRTCOBSEncoder's code, you can see example source code struct
 
 ```
 src
-©À©¤©¤ example
-©¦   ©¸©¤©¤ peerconnection
-©¦       ©¸©¤©¤ client
-©¦           ©À©¤©¤ conductor.cc
-©¦           ©À©¤©¤ conductor.h
-©¦           ©À©¤©¤ defaults.cc
-©¦           ©À©¤©¤ defaults.h
-©¦           ©À©¤©¤ flagdefs.h
-©¦           ©À©¤©¤ linux
-©¦           ©¦   ©À©¤©¤ main.cc
-©¦           ©¦   ©À©¤©¤ main_wnd.cc
-©¦           ©¦   ©¸©¤©¤ main_wnd.h
-©¦           ©À©¤©¤ main.cc
-©¦           ©À©¤©¤ main_wnd.cc
-©¦           ©À©¤©¤ main_wnd.h
-©¦           ©À©¤©¤ peer_connection_client.cc
-©¦           ©À©¤©¤ peer_connection_client.h
-©¦           ©À©¤©¤ win_obs_adapter.cpp
-©¦           ©À©¤©¤ win_obs_adapter.h
-©¦           ©À©¤©¤ win_obs_video_encoder.cpp
-©¦           ©¸©¤©¤ win_obs_video_encoder.h
-©¸©¤©¤ out
-    ©¸©¤©¤ win32
-        ©¸©¤©¤ obj
-            ©¸©¤©¤ examples
-                ©¸©¤©¤ peerconnection_client.ninja
+|-- example
+|   `-- peerconnection
+|       `-- client
+|           |-- conductor.cc
+|           |-- conductor.h
+|           |-- defaults.cc
+|           |-- defaults.h
+|           |-- flagdefs.h
+|           |-- linux
+|           |   |-- main.cc
+|           |   |-- main_wnd.cc
+|           |   `-- main_wnd.h
+|           |-- main.cc
+|           |-- main_wnd.cc
+|           |-- main_wnd.h
+|           |-- peer_connection_client.cc
+|           |-- peer_connection_client.h
+|           |-- win_obs_adapter.cpp
+|           |-- win_obs_adapter.h
+|           |-- win_obs_video_encoder.cpp
+|           `-- win_obs_video_encoder.h
+`-- out
+    `-- win32
+        `-- obj
+            `-- examples
+                `-- peerconnection_client.ninja
 ```
 It modifies the WebRTC's peerconnection/client demo, and with exactly the same structure, now copy and overriden all these files from WebRTCOBSEncoder to WebRTC's directory in the same location.
 
@@ -88,10 +88,10 @@ By type command "git diff" you can see what modified, how to invoke wrapped obs 
 The main obs encoder implmentation files list below:
 
 ```
-©À©¤©¤ win_obs_adapter.cpp
-©À©¤©¤ win_obs_adapter.h
-©À©¤©¤ win_obs_video_encoder.cpp
-©¸©¤©¤ win_obs_video_encoder.h
+|-- win_obs_adapter.cpp
+|-- win_obs_adapter.h
+|-- win_obs_video_encoder.cpp
+`-- win_obs_video_encoder.h
 ```
 
 ## 5.4 Build OBS
@@ -123,7 +123,7 @@ Follow the [official tutorial](https://github.com/obsproject/obs-studio/wiki/Ins
 Make a standalone obs header copy, there's a tool under WebRTCOBSEncoder:
 ```
 script/
-©¸©¤©¤ cph.sh
+`-- cph.sh
 
 cph.sh obs WebRTC/src/third_party/obs/win32/include
 ```
