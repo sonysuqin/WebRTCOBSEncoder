@@ -1,9 +1,9 @@
 /**
 *  @file        win_obs_video_encoder.h
-*  @brief       BeeSDK OBS编码器声明文件.
-*  @author      HeZhen
-*  @copyright   sohu-inc
-*  @version     2.0.0.1
+*  @brief       OBS编码器声明文件.
+*  @author      sonysuqin
+*  @copyright   sonysuqin
+*  @version     1.0.0.1
 */
 
 #ifdef OBS_ENCODER
