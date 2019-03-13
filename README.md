@@ -171,7 +171,7 @@ win-mf.dll
 Copy the following file to your executable path.
 ```
 config/
-©¸©¤©¤ obs.ini
+`-- obs.ini
 ```
 This file is almost the same as original OBS configure by which you can set all OBS supported codec parameters.
 
