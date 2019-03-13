@@ -1,0 +1,31 @@
+diff --git a/libobs/obs-scene.c b/libobs/obs-scene.c
+index 2b7a7f01..b9892d0b 100644
+--- a/libobs/obs-scene.c
++++ b/libobs/obs-scene.c
+@@ -1032,7 +1032,7 @@ static obs_source_t *get_child_at_idx(obs_scene_t *scene, size_t idx)
+ }
+ 
+ static inline obs_source_t *dup_child(struct darray *array, size_t idx,
+-		obs_scene_t *new_scene, bool private)
++		obs_scene_t *new_scene, bool _private)
+ {
+ 	DARRAY(struct obs_scene_item*) old_items;
+ 	obs_source_t *source;
+@@ -1053,7 +1053,7 @@ static inline obs_source_t *dup_child(struct darray *array, size_t idx,
+ 		}
+ 	}
+ 
+-	return obs_source_duplicate(source, NULL, private);
++	return obs_source_duplicate(source, NULL, _private);
+ }
+ 
+ static inline obs_source_t *new_ref(obs_source_t *source)
+@@ -1416,7 +1416,7 @@ obs_sceneitem_t *obs_scene_add(obs_scene_t *scene, obs_source_t *source)
+ 
+ 	full_unlock(scene);
+ 
+-	if (!scene->source->context.private)
++	if (!scene->source->context.private_)
+ 		init_hotkeys(scene, item, obs_source_get_name(source));
+ 
+ 	calldata_init_fixed(&params, stack, sizeof(stack));

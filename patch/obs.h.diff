@@ -1,0 +1,14 @@
+diff --git a/libobs/obs.h b/libobs/obs.h
+index 46115a44..d41c2cfd 100644
+--- a/libobs/obs.h
++++ b/libobs/obs.h
+@@ -1868,6 +1868,9 @@ EXPORT const char *obs_service_get_id(const obs_service_t *service);
+  * date. */
+ EXPORT const char *obs_service_get_output_type(const obs_service_t *service);
+ 
++/* NOTE: customize setting. */
++EXPORT int obs_customize_set();
++
+ 
+ /* ------------------------------------------------------------------------- */
+ /* Source frame allocation functions */

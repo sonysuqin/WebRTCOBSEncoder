@@ -1,0 +1,15 @@
+diff --git a/plugins/obs-x264/obs-x264.c b/plugins/obs-x264/obs-x264.c
+index d177a8e4..e1ffb9e4 100644
+--- a/plugins/obs-x264/obs-x264.c
++++ b/plugins/obs-x264/obs-x264.c
+@@ -706,6 +706,10 @@ static bool obs_x264_encode(void *data, struct encoder_frame *frame,
+ 	if (frame)
+ 		init_pic_data(obsx264, &pic, frame);
+ 
++    if (packet->keyframe && packet->force_keyframe) {
++        pic.i_type = X264_TYPE_KEYFRAME;
++    }
++
+ 	ret = x264_encoder_encode(obsx264->context, &nals, &nal_count,
+ 			(frame ? &pic : NULL), &pic_out);
+ 	if (ret < 0) {

@@ -1,0 +1,14 @@
+diff --git a/libobs/obs-encoder.h b/libobs/obs-encoder.h
+index 2220c5a5..e67eb5c8 100644
+--- a/libobs/obs-encoder.h
++++ b/libobs/obs-encoder.h
+@@ -82,6 +82,9 @@ struct encoder_packet {
+ 
+ 	/** Encoder from which the track originated from */
+ 	obs_encoder_t         *encoder;
++
++    /** Whether to force this frame encoded as key frame*/
++    bool                  force_keyframe;
+ };
+ 
+ /** Encoder input frame */

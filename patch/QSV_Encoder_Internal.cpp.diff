@@ -1,0 +1,111 @@
+diff --git a/plugins/obs-qsv11/QSV_Encoder_Internal.cpp b/plugins/obs-qsv11/QSV_Encoder_Internal.cpp
+index a458236f..89ccf13f 100644
+--- a/plugins/obs-qsv11/QSV_Encoder_Internal.cpp
++++ b/plugins/obs-qsv11/QSV_Encoder_Internal.cpp
+@@ -556,6 +556,106 @@ mfxStatus QSV_Encoder_Internal::Encode(uint64_t ts, uint8_t *pDataY,
+ 	return sts;
+ }
+ 
++mfxStatus QSV_Encoder_Internal::EncodeKeyFrame(uint64_t ts, uint8_t *pDataY,
++        uint8_t *pDataUV, uint32_t strideY, uint32_t strideUV,
++        mfxBitstream **pBS)
++{
++    mfxStatus sts = MFX_ERR_NONE;
++    *pBS = NULL;
++    int nTaskIdx = GetFreeTaskIndex(m_pTaskPool, m_nTaskPool);
++
++#if 0
++    info("MSDK Encode:\n"
++        "\tTaskIndex: %d",
++        nTaskIdx);
++#endif
++
++    int nSurfIdx = GetFreeSurfaceIndex(m_pmfxSurfaces, m_nSurfNum);
++#if 0
++    info("MSDK Encode:\n"
++        "\tnSurfIdx: %d",
++        nSurfIdx);
++#endif
++
++    while (MFX_ERR_NOT_FOUND == nTaskIdx || MFX_ERR_NOT_FOUND == nSurfIdx) {
++        // No more free tasks or surfaces, need to sync
++        sts = m_session.SyncOperation(m_pTaskPool[m_nFirstSyncTask].syncp,
++            60000);
++        MSDK_CHECK_RESULT(sts, MFX_ERR_NONE, sts);
++
++        mfxU8 *pTemp = m_outBitstream.Data;
++        memcpy(&m_outBitstream, &m_pTaskPool[m_nFirstSyncTask].mfxBS,
++            sizeof(mfxBitstream));
++
++        m_pTaskPool[m_nFirstSyncTask].mfxBS.Data = pTemp;
++        m_pTaskPool[m_nFirstSyncTask].mfxBS.DataLength = 0;
++        m_pTaskPool[m_nFirstSyncTask].mfxBS.DataOffset = 0;
++        m_pTaskPool[m_nFirstSyncTask].syncp = NULL;
++        nTaskIdx = m_nFirstSyncTask;
++        m_nFirstSyncTask = (m_nFirstSyncTask + 1) % m_nTaskPool;
++        *pBS = &m_outBitstream;
++
++#if 0
++        info("MSDK Encode:\n"
++            "\tnew FirstSyncTask: %d\n"
++            "\tTaskIndex:         %d",
++            m_nFirstSyncTask,
++            nTaskIdx);
++#endif
++
++        nSurfIdx = GetFreeSurfaceIndex(m_pmfxSurfaces, m_nSurfNum);
++#if 0
++        info("MSDK Encode:\n"
++            "\tnSurfIdx: %d",
++            nSurfIdx);
++#endif
++    }
++
++    mfxFrameSurface1 *pSurface = m_pmfxSurfaces[nSurfIdx];
++    if (m_bUseD3D11 || m_bD3D9HACK) {
++        sts = m_mfxAllocator.Lock(m_mfxAllocator.pthis,
++            pSurface->Data.MemId, &(pSurface->Data));
++        MSDK_CHECK_RESULT(sts, MFX_ERR_NONE, sts);
++    }
++
++    sts = LoadNV12(pSurface, pDataY, pDataUV, strideY, strideUV);
++    MSDK_CHECK_RESULT(sts, MFX_ERR_NONE, sts);
++    pSurface->Data.TimeStamp = ts;
++
++    if (m_bUseD3D11 || m_bD3D9HACK) {
++        sts = m_mfxAllocator.Unlock(m_mfxAllocator.pthis,
++            pSurface->Data.MemId, &(pSurface->Data));
++        MSDK_CHECK_RESULT(sts, MFX_ERR_NONE, sts);
++    }
++
++    for (;;) {
++        // Encode a frame asynchronously (returns immediately)
++        mfxEncodeCtrl EncodeCtrl; memset(&EncodeCtrl, 0, sizeof(mfxEncodeCtrl));
++        EncodeCtrl.FrameType = MFX_FRAMETYPE_I | MFX_FRAMETYPE_REF | MFX_FRAMETYPE_IDR;
++        sts = m_pmfxENC->EncodeFrameAsync(&EncodeCtrl, pSurface,
++            &m_pTaskPool[nTaskIdx].mfxBS,
++            &m_pTaskPool[nTaskIdx].syncp);
++
++        if (MFX_ERR_NONE < sts && !m_pTaskPool[nTaskIdx].syncp) {
++            // Repeat the call if warning and no output
++            if (MFX_WRN_DEVICE_BUSY == sts)
++                MSDK_SLEEP(1);  // Wait if device is busy, then repeat the same call
++        }
++        else if (MFX_ERR_NONE < sts && m_pTaskPool[nTaskIdx].syncp) {
++            sts = MFX_ERR_NONE;     // Ignore warnings if output is available
++            break;
++        }
++        else if (MFX_ERR_NOT_ENOUGH_BUFFER == sts) {
++            // Allocate more bitstream buffer memory here if needed...
++            break;
++        }
++        else
++            break;
++    }
++
++    return sts;
++}
++
+ mfxStatus QSV_Encoder_Internal::Drain()
+ {
+ 	mfxStatus sts = MFX_ERR_NONE;

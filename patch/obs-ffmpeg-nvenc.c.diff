@@ -1,0 +1,16 @@
+diff --git a/plugins/obs-ffmpeg/obs-ffmpeg-nvenc.c b/plugins/obs-ffmpeg/obs-ffmpeg-nvenc.c
+index 16cd32e0..dda45c76 100644
+--- a/plugins/obs-ffmpeg/obs-ffmpeg-nvenc.c
++++ b/plugins/obs-ffmpeg/obs-ffmpeg-nvenc.c
+@@ -340,6 +340,11 @@ static bool nvenc_encode(void *data, struct encoder_frame *frame,
+ 	copy_data(enc->vframe, frame, enc->height, enc->context->pix_fmt);
+ 
+ 	enc->vframe->pts = frame->pts;
++
++    if (packet->keyframe && packet->force_keyframe) {
++        enc->vframe->pict_type = AV_PICTURE_TYPE_I;
++        enc->vframe->key_frame = 1;
++    }
+ #if LIBAVFORMAT_VERSION_INT >= AV_VERSION_INT(57, 40, 101)
+ 	ret = avcodec_send_frame(enc->context, enc->vframe);
+ 	if (ret == 0)

@@ -1,0 +1,116 @@
+diff --git a/libobs/obs-source.c b/libobs/obs-source.c
+index 86971173..18e59b5b 100644
+--- a/libobs/obs-source.c
++++ b/libobs/obs-source.c
+@@ -82,10 +82,10 @@ static const char *source_signals[] = {
+ 
+ bool obs_source_init_context(struct obs_source *source,
+ 		obs_data_t *settings, const char *name, obs_data_t *hotkey_data,
+-		bool private)
++		bool _private)
+ {
+ 	if (!obs_context_data_init(&source->context, OBS_OBJ_TYPE_SOURCE,
+-				settings, name, hotkey_data, private))
++				settings, name, hotkey_data, _private))
+ 		return false;
+ 
+ 	return signal_handler_add_array(source->context.signals,
+@@ -294,7 +294,7 @@ static void obs_source_init_audio_hotkeys(struct obs_source *source)
+ 
+ static obs_source_t *obs_source_create_internal(const char *id,
+ 		const char *name, obs_data_t *settings,
+-		obs_data_t *hotkey_data, bool private)
++		obs_data_t *hotkey_data, bool _private)
+ {
+ 	struct obs_source *source = bzalloc(sizeof(struct obs_source));
+ 
+@@ -312,7 +312,7 @@ static obs_source_t *obs_source_create_internal(const char *id,
+ 		 *
+ 		 * XXX: Fix design flaws with filters */
+ 		if (info->type == OBS_SOURCE_TYPE_FILTER)
+-			private = true;
++			_private = true;
+ 	}
+ 
+ 	source->mute_unmute_key  = OBS_INVALID_HOTKEY_PAIR_ID;
+@@ -320,7 +320,7 @@ static obs_source_t *obs_source_create_internal(const char *id,
+ 	source->push_to_talk_key = OBS_INVALID_HOTKEY_ID;
+ 
+ 	if (!obs_source_init_context(source, settings, name, hotkey_data,
+-				private))
++				_private))
+ 		goto fail;
+ 
+ 	if (info) {
+@@ -334,7 +334,7 @@ static obs_source_t *obs_source_create_internal(const char *id,
+ 	if (!obs_source_init(source))
+ 		goto fail;
+ 
+-	if (!private)
++	if (!_private)
+ 		obs_source_init_audio_hotkeys(source);
+ 
+ 	/* allow the source to be created even if creation fails so that the
+@@ -346,7 +346,7 @@ static obs_source_t *obs_source_create_internal(const char *id,
+ 		blog(LOG_ERROR, "Failed to create source '%s'!", name);
+ 
+ 	blog(LOG_DEBUG, "%ssource '%s' (%s) created",
+-			private ? "private " : "", name, id);
++			_private ? "private " : "", name, id);
+ 	obs_source_dosignal(source, "source_create", NULL);
+ 
+ 	source->flags = source->default_flags;
+@@ -394,7 +394,7 @@ static char *get_new_filter_name(obs_source_t *dst, const char *name)
+ }
+ 
+ static void duplicate_filters(obs_source_t *dst, obs_source_t *src,
+-		bool private)
++		bool _private)
+ {
+ 	DARRAY(obs_source_t*) filters;
+ 
+@@ -413,7 +413,7 @@ static void duplicate_filters(obs_source_t *dst, obs_source_t *src,
+ 		bool enabled = obs_source_enabled(src_filter);
+ 
+ 		obs_source_t *dst_filter = obs_source_duplicate(src_filter,
+-				new_name, private);
++				new_name, _private);
+ 		obs_source_set_enabled(dst_filter, enabled);
+ 
+ 		bfree(new_name);
+@@ -427,7 +427,7 @@ static void duplicate_filters(obs_source_t *dst, obs_source_t *src,
+ 
+ void obs_source_copy_filters(obs_source_t *dst, obs_source_t *src)
+ {
+-	duplicate_filters(dst, src, dst->context.private);
++	duplicate_filters(dst, src, dst->context.private_);
+ }
+ 
+ obs_source_t *obs_source_duplicate(obs_source_t *source,
+@@ -533,7 +533,7 @@ void obs_source_destroy(struct obs_source *source)
+ 	obs_context_data_remove(&source->context);
+ 
+ 	blog(LOG_DEBUG, "%ssource '%s' destroyed",
+-			source->context.private ? "private " : "",
++			source->context.private_ ? "private " : "",
+ 			source->context.name);
+ 
+ 	obs_source_dosignal(source, "source_destroy", "destroy");
+@@ -2820,7 +2820,7 @@ void obs_source_set_name(obs_source_t *source, const char *name)
+ 		calldata_set_ptr(&data, "source", source);
+ 		calldata_set_string(&data, "new_name", source->context.name);
+ 		calldata_set_string(&data, "prev_name", prev_name);
+-		if (!source->context.private)
++		if (!source->context.private_)
+ 			signal_handler_signal(obs->signals, "source_rename",
+ 					&data);
+ 		signal_handler_signal(source->context.signals, "rename", &data);
+@@ -3067,7 +3067,7 @@ void obs_source_set_volume(obs_source_t *source, float volume)
+ 		calldata_set_float(&data, "volume", volume);
+ 
+ 		signal_handler_signal(source->context.signals, "volume", &data);
+-		if (!source->context.private)
++		if (!source->context.private_)
+ 			signal_handler_signal(obs->signals, "source_volume",
+ 					&data);
+ 

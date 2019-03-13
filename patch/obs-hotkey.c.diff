@@ -1,0 +1,13 @@
+diff --git a/libobs/obs-hotkey.c b/libobs/obs-hotkey.c
+index 7d41cff2..d211fad6 100644
+--- a/libobs/obs-hotkey.c
++++ b/libobs/obs-hotkey.c
+@@ -206,7 +206,7 @@ obs_hotkey_id obs_hotkey_register_service(obs_service_t *service,
+ obs_hotkey_id obs_hotkey_register_source(obs_source_t *source, const char *name,
+ 		const char *description, obs_hotkey_func func, void *data)
+ {
+-	if (!source || source->context.private || !lock())
++	if (!source || source->context.private_ || !lock())
+ 		return OBS_INVALID_HOTKEY_ID;
+ 
+ 	obs_hotkey_id id = obs_hotkey_register_internal(

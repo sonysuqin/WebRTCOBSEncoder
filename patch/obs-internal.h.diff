@@ -1,0 +1,83 @@
+diff --git a/libobs/obs-internal.h b/libobs/obs-internal.h
+index eede65bd..24361e07 100644
+--- a/libobs/obs-internal.h
++++ b/libobs/obs-internal.h
+@@ -284,6 +284,7 @@ struct obs_core_video {
+ 	gs_effect_t                     *deinterlace_yadif_2x_effect;
+ 
+ 	struct obs_video_info           ovi;
++    bool                            bypass_graphics;
+ };
+ 
+ struct audio_monitor;
+@@ -431,7 +432,7 @@ struct obs_context_data {
+ 	struct obs_context_data         *next;
+ 	struct obs_context_data         **prev_next;
+ 
+-	bool                            private;
++	bool                            private_;
+ };
+ 
+ extern bool obs_context_data_init(
+@@ -440,8 +441,8 @@ extern bool obs_context_data_init(
+ 		obs_data_t              *settings,
+ 		const char              *name,
+ 		obs_data_t              *hotkey_data,
+-		bool                    private);
+-extern void obs_context_data_free(struct obs_context_data *context);
++		bool                    _private);
++EXPORT void obs_context_data_free(struct obs_context_data *context);
+ 
+ extern void obs_context_data_insert(struct obs_context_data *context,
+ 		pthread_mutex_t *mutex, void *first);
+@@ -694,7 +695,7 @@ struct obs_source {
+ extern struct obs_source_info *get_source_info(const char *id);
+ extern bool obs_source_init_context(struct obs_source *source,
+ 		obs_data_t *settings, const char *name,
+-		obs_data_t *hotkey_data, bool private);
++		obs_data_t *hotkey_data, bool _private);
+ 
+ extern void obs_source_save(obs_source_t *source);
+ extern void obs_source_load(obs_source_t *source);
+@@ -726,7 +727,7 @@ static inline void obs_source_dosignal(struct obs_source *source,
+ 
+ 	calldata_init_fixed(&data, stack, sizeof(stack));
+ 	calldata_set_ptr(&data, "source", source);
+-	if (signal_obs && !source->context.private)
++	if (signal_obs && !source->context.private_)
+ 		signal_handler_signal(obs->signals, signal_obs, &data);
+ 	if (signal_source)
+ 		signal_handler_signal(source->context.signals, signal_source,
+@@ -985,24 +986,24 @@ struct obs_encoder {
+ 	const char                      *profile_encoder_encode_name;
+ };
+ 
+-extern struct obs_encoder_info *find_encoder(const char *id);
++EXPORT struct obs_encoder_info *find_encoder(const char *id);
+ 
+-extern bool obs_encoder_initialize(obs_encoder_t *encoder);
+-extern void obs_encoder_shutdown(obs_encoder_t *encoder);
++EXPORT bool obs_encoder_initialize(obs_encoder_t *encoder);
++EXPORT void obs_encoder_shutdown(obs_encoder_t *encoder);
+ 
+-extern void obs_encoder_start(obs_encoder_t *encoder,
++EXPORT void obs_encoder_start(obs_encoder_t *encoder,
+ 		void (*new_packet)(void *param, struct encoder_packet *packet),
+ 		void *param);
+-extern void obs_encoder_stop(obs_encoder_t *encoder,
++EXPORT void obs_encoder_stop(obs_encoder_t *encoder,
+ 		void (*new_packet)(void *param, struct encoder_packet *packet),
+ 		void *param);
+ 
+-extern void obs_encoder_add_output(struct obs_encoder *encoder,
++EXPORT void obs_encoder_add_output(struct obs_encoder *encoder,
+ 		struct obs_output *output);
+-extern void obs_encoder_remove_output(struct obs_encoder *encoder,
++EXPORT void obs_encoder_remove_output(struct obs_encoder *encoder,
+ 		struct obs_output *output);
+ 
+-void obs_encoder_destroy(obs_encoder_t *encoder);
++EXPORT void obs_encoder_destroy(obs_encoder_t *encoder);
+ 
+ /* ------------------------------------------------------------------------- */
+ /* services */
