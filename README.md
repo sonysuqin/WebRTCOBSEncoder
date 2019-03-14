@@ -182,4 +182,7 @@ Just rebuilt it from IDE or from shell by ninja command.
 Under WebRTC output executable path:
 - Run one peerconnection_server.exe;
 - Run two peerconnection_client.exe, both connect to the same peerconnection_server.exe;
-- Click the target in the user list to make a end-to-end streaming, both of the clients should be in the same LAN.
+- Click the target in the user list to make a end-to-end streaming, both of the clients should be in the same LAN;
+- By modifying obs.ini you can choose encoder between supported and set their parameters.
+
+You wouldn't see obvious difference when you push a 640*480 30FPS stream, when you push 720P 30FPS, little difference happens, when you push 1080P 30FPS, you can see advantage of hardware acceleration.
