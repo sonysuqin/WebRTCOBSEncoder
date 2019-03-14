@@ -116,7 +116,7 @@ cd patch
 ```
 > Only working for 21.0.3 branch.
 
-### 5.4.4 How to build OBS
+### 5.4.4 Build
 Follow the [official tutorial](https://github.com/obsproject/obs-studio/wiki/Install-Instructions).
 
 ### 5.4.5 Copy OBS headers
