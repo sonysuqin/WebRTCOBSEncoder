@@ -21,7 +21,6 @@ extern "C" {
 #include "rtc_base/asyncinvoker.h"
 #include "media/engine/webrtcvideoencoderfactory.h"
 #include "common_video/h264/h264_bitstream_parser.h"
-#include "system_wrappers/include/clock.h"
 
 namespace webrtc {
 
@@ -309,11 +308,6 @@ private:
     int32_t output_timestamp_ = 0;
     /// 相对时间戳，以ms为单位.
     int64_t output_render_time_ms_ = 0;
-
-    /// 时钟.
-    webrtc::Clock* clock_;
-    /// NTP时间(1900)与UNIX时间(1970)的差值.
-    int64_t delta_ntp_internal_ms_ = 0;
 
     /// 最后收到待编码帧的时间.
     int64_t last_frame_received_ms_ = 0;

@@ -22,9 +22,7 @@ namespace webrtc {
 
 const int32_t kMaxObsVideoEncoderFps = 30;
 
-WinObsVideoEncoder::WinObsVideoEncoder()
-    : clock_(webrtc::Clock::GetRealTimeClock()),
-      delta_ntp_internal_ms_(clock_->CurrentNtpInMilliseconds() - clock_->TimeInMilliseconds()) {
+WinObsVideoEncoder::WinObsVideoEncoder() {
 
 }
 
