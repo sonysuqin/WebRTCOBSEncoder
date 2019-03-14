@@ -710,7 +710,6 @@ webrtc::VideoEncoder* WinObsVideoEncoderFactory::CreateVideoEncoder(const cricke
 }
 
 const std::vector<cricket::VideoCodec>& WinObsVideoEncoderFactory::supported_codecs() const {
-    printf("111");
     return supported_codecs_;
 }
 
